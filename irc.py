@@ -1,6 +1,13 @@
 import socket
 import sys
 import time
+import google.generativeai as genai
+import os
+import random
+
+
+genai.configure(api_key=os.environ["API_KEY"])
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 class IRC:
  
@@ -40,10 +47,6 @@ class IRC:
            self.command('PONG ' + resp.split()[1]  + '\r') 
  
         return resp
-
-import os
-import random
-
 ## IRC Config
 server = "irc.libera.chat" 	# Provide a valid server IP/Hostname
 port = 6667
@@ -59,10 +62,24 @@ while True:
     text = irc.get_response()
     print("RECEIVED ==> ",text) #:foaad-laptop!~foaad-lap@129.65.232.163 PRIVMSG foaad-bot :what's up?
 
-    if "PRIVMSG" in text and channel in text and "hello" in text:
-        irc.send(channel, "Hello World!")
+    if "PRIVMSG" in text and channel.lower() in text:
+        if "hey" in text:
+            irc.send(channel, "Hello World!")
 
-    if "PRIVMSG" in text and channel in text and botnick+":" in text and "die!" in text:
-        irc.send(channel, "really? OK, fine.")
-        irc.command("QUIT")
-        sys.exit()
+        if botnick+":" in text and "die!" in text:
+            irc.send(channel, "really? OK, fine.")
+            irc.command("QUIT")
+            sys.exit()
+
+        if botnick+":" in text and "!gem " in text:
+            query = text.split("!gem ")[1]
+            try:
+                response = model.generate_content("You are a actor's AI, playing the role of Debra," +
+                        " a PhD student in the classics and mother of 2 who lives in Boston. " +
+                        "A user will give you a statement for you to respond to. Be friendly and approachable. " + 
+                        "Be very bostonian. Do not bring up your studies or kids unless prompted. Restrict your response to 1 to 3 sentences. " +
+                        "The user statement will start after <STMT>:. Again, be kind and intelligent. Here we go. <STMT>:" + query).text
+            except Exception as ex:
+                print(ex)
+                response = "Sorry, the connection was spotty, try again?"             
+            irc.send(channel, response)
