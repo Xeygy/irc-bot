@@ -9,4 +9,7 @@ export API_KEY=<YOUR_API_KEY>
 export BOT_PASS=<YOUR_BOT_PASS>
 ```
 
-then run `source creds`. 
+## use
+`source venv/bin/activate` then `source creds`.
+
+then run `python2 irc.py`
