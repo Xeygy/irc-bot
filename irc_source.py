@@ -81,30 +81,28 @@ def main():
                 currentUsers.remove(getUsername(text))
         else: # if "PRIVMSG" in text:
             if channel in text and botnick+":" in text:
-                message = getMessage(text)
+                message = getMessage(text).lower()
 
-                if ("hello" in message or "hi" in message):
-                    irc.send(channel, f"{getUsername(text)}: Hello World!")
-                
-                if ("who are you?" in message or "usage" in message):
+                if "die" == message:
+                    irc.send(channel, f"{getUsername(text)}: Alright then. It was nice knowing you.")
+                    irc.command("QUIT")
+                    sys.exit()
+                elif "forget" == message:
+                    irc.send(channel, f"{getUsername(text)}: Forgetting Everything.")
+                elif ("who are you?" == message or "usage" == message):
                     irc.send(channel, f"{getUsername(text)}: My name is {botnick}. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.")
                     irc.send(channel, f"{getUsername(text)}: I do not yet have a purpose or usage.")
-
-                if "users" in message:
+                elif "users" == message:
                     currentUsersStr = ""
                     for user in sorted(currentUsers):
                         currentUsersStr += user
                         currentUsersStr += ", "
                     irc.send(channel, f"{getUsername(text)}: {currentUsersStr[:-2]}")
                     print(currentUsers)
-                    
-                if "forget" in message:
-                    irc.send(channel, f"{getUsername(text)}: Forgetting Everything")
-                    
-                if "die" in message:
-                    irc.send(channel, f"{getUsername(text)}: Bet")
-                    irc.command("QUIT")
-                    sys.exit()
+                elif ("hello" in message or "hi" in message):
+                    irc.send(channel, f"{getUsername(text)}: Hello World!")
+                else:
+                    irc.send(channel, f"{getUsername(text)}: I did not understand what you said.")    
                 
 if __name__=="__main__":
     main()
