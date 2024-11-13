@@ -51,26 +51,31 @@ class IRCBot(irc.bot.SingleServerIRCBot):
         if cmd == "die":
             self.die(f"{sender}: Bet")
         elif cmd == "forget":
-            c.privmsg(sender, "Forgetting Everything")
+            # c.send_raw(sender, "Forgetting Everything")
+            c.send_raw("Forgetting Everything")
         elif cmd == "users":
             pass
-        elif cmd == "stats":
-            for chname, chobj in self.channels.items():
-                c.notice(sender, "--- Channel statistics ---")
-                c.notice(sender, "Channel: " + chname)
-                users = sorted(chobj.users())
-                c.notice(sender, "Users: " + ", ".join(users))
-                opers = sorted(chobj.opers())
-                c.notice(sender, "Opers: " + ", ".join(opers))
-                voiced = sorted(chobj.voiced())
-                c.notice(sender, "Voiced: " + ", ".join(voiced))
-        elif cmd == "dcc":
-            dcc = self.dcc_listen()
-            c.ctcp(
-                "DCC",
-                sender,
-                f"CHAT chat {ip_quad_to_numstr(dcc.localaddress)} {dcc.localport}",
-            )
+        elif cmd == "hi" or cmd == "hello":
+            pass
+        elif cmd == "hi" or cmd == "hello":
+            pass
+        # elif cmd == "stats":
+        #     for chname, chobj in self.channels.items():
+        #         c.notice(sender, "--- Channel statistics ---")
+        #         c.notice(sender, "Channel: " + chname)
+        #         users = sorted(chobj.users())
+        #         c.notice(sender, "Users: " + ", ".join(users))
+        #         opers = sorted(chobj.opers())
+        #         c.notice(sender, "Opers: " + ", ".join(opers))
+        #         voiced = sorted(chobj.voiced())
+        #         c.notice(sender, "Voiced: " + ", ".join(voiced))
+        # elif cmd == "dcc":
+        #     dcc = self.dcc_listen()
+        #     c.ctcp(
+        #         "DCC",
+        #         sender,
+        #         f"CHAT chat {ip_quad_to_numstr(dcc.localaddress)} {dcc.localport}",
+        #     )
         else:
             c.privmsg(sender, "Not understood: " + cmd)
 

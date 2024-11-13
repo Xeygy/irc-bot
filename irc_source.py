@@ -50,6 +50,9 @@ channel = "#csc482"
 botnick = "test-bot"
 botnickpass = ""		# in case you have a registered nickname 		
 botpass = ""			# in case you have a registered bot	
+
+def getSender(text):
+    return text[1:text.index("!")]
         
 def main():
     irc = IRC()
@@ -58,12 +61,22 @@ def main():
     while True:
         text = irc.get_response()
         print("RECEIVED ==> ",text) #:foaad-laptop!~foaad-lap@129.65.232.163 PRIVMSG foaad-bot :what's up?
+        
+        if "PRIVMSG" in text and channel in text and botnick+":" in text and ("hello" in text or "hi" in text):
+            irc.send(channel, f"{getSender(text)}: Hello World!")
+            
+        if "PRIVMSG" in text and channel in text and botnick+":" in text and ("who are you?" in text or "usage" in text):
+            irc.send(channel, f"{getSender(text)}: My name is {botnick}. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.")
+            irc.send(channel, f"{getSender(text)}: I do not yet have a purpose or usage.")
 
-        if "PRIVMSG" in text and channel in text and "hello" in text:
-            irc.send(channel, "Hello World!")
-
-        if "PRIVMSG" in text and channel in text and botnick+":" in text and "die!" in text:
-            irc.send(channel, "really? OK, fine.")
+        if "PRIVMSG" in text and channel in text and botnick+":" in text and "users" in text:
+            irc.send(channel, f"{getSender(text)}: Bet")
+            
+        if "PRIVMSG" in text and channel in text and botnick+":" in text and "forget" in text:
+            irc.send(channel, f"{getSender(text)}: Bet")
+            
+        if "PRIVMSG" in text and channel in text and botnick+":" in text and "die" in text:
+            irc.send(channel, f"{getSender(text)}: Bet")
             irc.command("QUIT")
             sys.exit()
         
