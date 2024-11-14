@@ -83,16 +83,16 @@ def main():
             if channel in text and botnick+":" in text:
                 message = getMessage(text).lower()
 
-                if "die" == message:
+                if "die" in message:
                     irc.send(channel, f"{getUsername(text)}: Alright then. It was nice knowing you.")
                     irc.command("QUIT")
                     sys.exit()
-                elif "forget" == message:
+                elif "forget" in message:
                     irc.send(channel, f"{getUsername(text)}: Forgetting Everything.")
                 elif ("who are you?" == message or "usage" == message):
                     irc.send(channel, f"{getUsername(text)}: My name is {botnick}. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.")
                     irc.send(channel, f"{getUsername(text)}: I do not yet have a purpose or usage.")
-                elif "users" == message:
+                elif "users" in message:
                     currentUsersStr = ""
                     for user in sorted(currentUsers):
                         currentUsersStr += user
