@@ -26,10 +26,9 @@ class MyFSM:
         self.END = Node()
         give_up = Node("i give up fr fr :(", self.END)
         inquiry_reply2 = Node("cool cool.", self.END)
-        inquiry_wait2 = GUNode(nextNode=inquiry_reply2, giveUpNode=give_up)
-        inquiry_reply1 = Node("cool.", inquiry_wait2)
-        inquiry_wait1 = GUNode(nextNode=inquiry_reply1, giveUpNode=give_up)
-        outreach_reply = GUNode("how are you!", nextNode=inquiry_wait1, giveUpNode=give_up)
+        inquiry_wait1 = GUNode(nextNode=inquiry_reply2, giveUpNode=give_up)
+        inquiry_reply1 = Node("cool.", inquiry_wait1)
+        outreach_reply = GUNode("hello back at you!", nextNode=inquiry_reply1, giveUpNode=give_up)
         outreach2 =  GUNode("heloooo! :3", nextNode=outreach_reply, giveUpNode=give_up)
         outreach1 =  GUNode("hello :)", nextNode=outreach_reply, giveUpNode=outreach2)
         self.START = Node(nextNode=outreach1)
@@ -50,6 +49,8 @@ class MyFSM:
         if (isinstance(self.state, GUNode)):
             self.timer = threading.Timer(self.state.giveUpTime, self.give_up)
             self.timer.start()
+        elif self.state != self.END:
+                self.updateState()
 
     def give_up(self):
         self.updateState(self.state.giveUpNode)
