@@ -89,7 +89,7 @@ def main():
                     sys.exit()
                 elif "forget" in message:
                     irc.send(channel, f"{getUsername(text)}: Forgetting Everything.")
-                elif ("who are you?" == message or "usage" == message):
+                elif ("who are you?" in message or "usage" in message):
                     irc.send(channel, f"{getUsername(text)}: My name is {botnick}. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.")
                     irc.send(channel, f"{getUsername(text)}: I do not yet have a purpose or usage.")
                 elif "users" in message:
