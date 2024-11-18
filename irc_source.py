@@ -49,12 +49,34 @@ botnick = "hello-world-bot"
 botnickpass = ""		# in case you have a registered nickname 		
 botpass = ""			# in case you have a registered bot	
 
-def getUsername(text):
+def getUsername(text: str) -> str:
     return text[1:text.index("!")]
 
-def getMessage(text):
+def getMessage(text: str) -> str:
     return text[text.index(f"{botnick}:") + len(botnick) + 1:]
-        
+
+def basicCommands(irc: IRC, username: str, message: str, currentUsers: set):
+    if "die" in message:
+        irc.send(channel, f"{username}: Alright then. It was nice knowing you.")
+        irc.command("QUIT")
+        sys.exit()
+    elif "forget" in message:
+        irc.send(channel, f"{username}: Forgetting Everything.")
+    elif ("who are you?" in message or "usage" in message):
+        irc.send(channel, f"{username}: My name is {botnick}. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.")
+        irc.send(channel, f"{username}: I do not yet have a purpose or usage.")
+    elif "users" in message:
+        currentUsersStr = ""
+        for user in sorted(currentUsers):
+            currentUsersStr += user
+            currentUsersStr += ", "
+        irc.send(channel, f"{username}: {currentUsersStr[:-2]}")
+        print(currentUsers)
+    elif ("hello" in message or "hi" in message):
+        irc.send(channel, f"{username}: Hello World!")
+    else:
+        irc.send(channel, f"{username}: I did not understand what you said.")    
+
 def main():
     irc = IRC()
     irc.connect(server, port, channel, botnick, botpass, botnickpass)
@@ -66,6 +88,7 @@ def main():
         print("RECEIVED ==> ",text) #:foaad-laptop!~foaad-lap@129.65.232.163 PRIVMSG foaad-bot :what's up?
 
         if "PRIVMSG" not in text:
+            # Manage current user list 
             if "NAMES list" in text:
                 list = text[text.index(f"{channel} :") + len(channel) + 2:].split()
                 for user in list:
@@ -81,28 +104,7 @@ def main():
                 currentUsers.remove(getUsername(text))
         else: # if "PRIVMSG" in text:
             if channel in text and botnick+":" in text:
-                message = getMessage(text).lower()
-
-                if "die" in message:
-                    irc.send(channel, f"{getUsername(text)}: Alright then. It was nice knowing you.")
-                    irc.command("QUIT")
-                    sys.exit()
-                elif "forget" in message:
-                    irc.send(channel, f"{getUsername(text)}: Forgetting Everything.")
-                elif ("who are you?" in message or "usage" in message):
-                    irc.send(channel, f"{getUsername(text)}: My name is {botnick}. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.")
-                    irc.send(channel, f"{getUsername(text)}: I do not yet have a purpose or usage.")
-                elif "users" in message:
-                    currentUsersStr = ""
-                    for user in sorted(currentUsers):
-                        currentUsersStr += user
-                        currentUsersStr += ", "
-                    irc.send(channel, f"{getUsername(text)}: {currentUsersStr[:-2]}")
-                    print(currentUsers)
-                elif ("hello" in message or "hi" in message):
-                    irc.send(channel, f"{getUsername(text)}: Hello World!")
-                else:
-                    irc.send(channel, f"{getUsername(text)}: I did not understand what you said.")    
+                basicCommands(irc, getUsername(text), getMessage(text).lower(), currentUsers) 
                 
 if __name__=="__main__":
     main()
