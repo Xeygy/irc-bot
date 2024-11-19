@@ -1,6 +1,7 @@
 from datetime import datetime
 from time import sleep
 import threading
+import random
 
 class Node:
     def __init__(self, 
@@ -54,6 +55,48 @@ class MyFSM:
 
     def give_up(self):
         self.updateState(self.state.giveUpNode)
+
+class GreetingProtocol():
+    def __init__(self):
+        self.initial_outreach = GUNode()
+        self.second_outreach = GUNode()
+        self.outreach_reply = GUNode()
+
+        self.inquiry_1 = GUNode()
+        self.inquriy_reply_1 = Node()
+        
+        self.inquiry_2 = GUNode()
+        self.inquiry_reply_2 = Node()
+
+        self.giveup_frustrated = Node()
+
+        self.state = self.initial_outreach
+        self.end = Node("")
+
+        self.conversation = False
+        self.finished = False
+    
+    def start(self, speaker: int):
+        self.conversation = True
+        
+        print(f"Starting Greeting Protocol. Speaker - {speaker}")
+
+    def restart(self):
+        self.state = self.initial_outreach
+
+    def getMessage(state: str) -> str:
+        messages = {
+            "inital_outreach": ["Hi!", "Hello"],
+            "second_outreach": ["I said Hi!", "Excuse me, hello?"],
+            "outreach_reply": ["Hi", "Hello back at you"],
+            "inquiry_1": ["How are you?", "What's happening"],
+            "inquiry_2": ["How about you?", "And yourself?"],
+            "inquiry_reply_1": ["I'm good", "I'm fine"],
+            "inquiry_reply_2": ["I'm good", "I'm fine, thanks for asking"],
+            "give_up": ["Ok, forget you.", "Whatever", "I can't with you"],
+        }
+        
+        return random.choice(messages[state])
 
 def run_fsm():
     fsm = MyFSM()

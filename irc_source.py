@@ -1,7 +1,12 @@
+import random
+import re
 import socket
 import sys
 import time
-import re
+import threading
+
+import state_machine as sm
+from state_machine import GreetingProtocol
 
 class IRC:
     irc = socket.socket()
@@ -22,6 +27,8 @@ class IRC:
         print("Connecting to: " + server)
         self.irc.connect((server, port))
 
+        self.irc.settimeout(20)
+
         # Perform user authentication
         self.command("USER " + botnick + " " + botnick +" " + botnick + " :python")
         self.command("NICK " + botnick)
@@ -32,14 +39,17 @@ class IRC:
         self.command("JOIN " + channel)
  
     def get_response(self):
-        time.sleep(1)
-        # Get the response
-        resp = self.irc.recv(2040).decode("UTF-8")
- 
-        if resp.find('PING') != -1:
-           self.command('PONG ' + resp.split()[1]  + '\r') 
- 
-        return resp
+        try:
+            time.sleep(1)
+            # Get the response
+            resp = self.irc.recv(2040).decode("UTF-8")
+    
+            if resp.find('PING') != -1:
+                self.command('PONG ' + resp.split()[1]  + '\r') 
+    
+            return resp
+        except socket.timeout:
+            return "No response within timeout period"
 
 ## IRC Config
 server = "irc.libera.chat" 	# Provide a valid server IP/Hostname
@@ -55,7 +65,12 @@ def getUsername(text: str) -> str:
 def getMessage(text: str) -> str:
     return text[text.index(f"{botnick}:") + len(botnick) + 1:]
 
-def basicCommands(irc: IRC, username: str, message: str, currentUsers: set):
+def secondsToWait(outreach: bool) -> int:
+    if outreach:
+        return random.randint(10, 20)
+    return random.randint(20, 30)
+
+def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, greetingProtocol: GreetingProtocol):    
     if "die" in message:
         irc.send(channel, f"{username}: Alright then. It was nice knowing you.")
         irc.command("QUIT")
@@ -73,38 +88,65 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set):
         irc.send(channel, f"{username}: {currentUsersStr[:-2]}")
         print(currentUsers)
     elif ("hello" in message or "hi" in message):
-        irc.send(channel, f"{username}: Hello World!")
+        if not greetingProtocol.finished:
+            greetingProtocol.start(2)
+        else:
+            irc.send(channel, f"{username}: Hello World!")
     else:
         irc.send(channel, f"{username}: I did not understand what you said.")    
 
+def manageCurrentUsers(text: str, currentUsers: set):
+    if "NAMES list" in text:
+        list = text[text.index(f"{channel} :") + len(channel) + 2:].split()
+        for user in list:
+            if not re.search(r":[A-Za-z]+.libera.chat", user):
+                currentUsers.add(user)
+            else:
+                break
+        print(currentUsers)
+    elif "JOIN" in text:
+        currentUsers.add(getUsername(text))
+    elif "QUIT" in text:
+        currentUsers.remove(getUsername(text))
+
+def startGreetingProtocol():
+    pass
+
 def main():
+    greetingProtocol = GreetingProtocol()
     irc = IRC()
     irc.connect(server, port, channel, botnick, botpass, botnickpass)
 
+    # Keep track of current users
     currentUsers = set()
     
+    start = 0
     while True:
         text = irc.get_response()
         print("RECEIVED ==> ",text) #:foaad-laptop!~foaad-lap@129.65.232.163 PRIVMSG foaad-bot :what's up?
+       
+        if start != 0:
+            time_passed = time.time() - start
+            print(time_passed)
 
-        if "PRIVMSG" not in text:
-            # Manage current user list 
-            if "NAMES list" in text:
-                list = text[text.index(f"{channel} :") + len(channel) + 2:].split()
-                for user in list:
-                    if not re.search(r":[A-Za-z]+.libera.chat", user):
-                        currentUsers.add(user)
-                    else:
-                        break
+            if not greetingProtocol.finished and time_passed > secondsToWait(outreach=True):
+                greetingProtocol.start(1)
 
-                print(currentUsers)
-            elif "JOIN" in text:
-                currentUsers.add(getUsername(text))
-            elif "QUIT" in text:
-                currentUsers.remove(getUsername(text))
-        else: # if "PRIVMSG" in text:
+            # Reset timer
+            start = time.time()
+
+        if "PRIVMSG" in text:
             if channel in text and botnick+":" in text:
-                basicCommands(irc, getUsername(text), getMessage(text).lower(), currentUsers) 
+                if greetingProtocol.conversation:
+                    pass
+                else:
+                    basicCommands(irc, getUsername(text), getMessage(text).lower(), currentUsers, greetingProtocol) 
+        else:
+            manageCurrentUsers(text, currentUsers)
+
+            if "JOIN" in text and getUsername(text) == botnick:
+                # Start timer
+                start = time.time()
                 
 if __name__=="__main__":
     main()
