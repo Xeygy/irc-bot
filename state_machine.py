@@ -73,10 +73,12 @@ class GreetingProtocol():
         self.giveup_frustrated = Node(nextNode=self.end)
 
         self.inquiry_reply_1 = Node(nextNode=self.end)
-        self.inquiry_2 = GUNode(nextNode=self.inquiry_reply_1, giveUpNode=self.giveup_frustrated)
+        self.inquiry_2 = GUNode(nextNode=self.end, giveUpNode=self.giveup_frustrated)
+
+        self.inquiry_temp_1 = Node(nextNode=self.inquiry_reply_1)
         
         self.inquiry_reply_2 = Node(nextNode=self.inquiry_2)
-        self.inquiry_1 = GUNode(nextNode=self.inquiry_reply_2, giveUpNode=self.giveup_frustrated)
+        self.inquiry_1 = GUNode(nextNode=self.inquiry_temp_1, giveUpNode=self.giveup_frustrated)
 
         self.outreach_reply = GUNode(nextNode=self.inquiry_reply_2, giveUpNode=self.giveup_frustrated)
         self.second_outreach = GUNode(nextNode=self.inquiry_1, giveUpNode=self.giveup_frustrated)
@@ -99,29 +101,31 @@ class GreetingProtocol():
 
     def executeState(self):
         if self.current_state == self.initial_outreach:
-            return "initial outreach"
+            return self.getMessage("initial_outreach")
         elif self.current_state == self.second_outreach:
-            return "second outreach"
+            return self.getMessage("second_outreach")
         elif self.current_state == self.inquiry_1:
-            return "inquiry 1"
+            return self.getMessage("inquiry_1")
         elif self.current_state == self.inquiry_reply_1:
-            return "inquiry reply 1"
+            return self.getMessage("inquiry_reply_1")
+        elif self.current_state == self.inquiry_temp_1:
+            return ""
         elif self.current_state == self.inquiry_2:
-            return "inquiry 2"
+            return self.getMessage("inquiry_2")
         elif self.current_state == self.inquiry_reply_2:
-            return "inquiry reply 2"
+            return self.getMessage("inquiry_reply_2")
         elif self.current_state == self.outreach_reply:
-            return "outreach reply"
+            return self.getMessage("outreach_reply")
         elif self.current_state == self.giveup_frustrated:
             self.finished = True
             self.conversation = False
-            return "give up frustrated"
+            return self.getMessage("give_up")
         else:
             self.finished = True
             self.conversation = False
-            return "End"
+            return ""
 
-    def updateState(self, message: str = None, timeout: bool = None):
+    def updateState(self, timeout: bool = None):
         if timeout:
             if isinstance(self.current_state, GUNode):
                 self.current_state = self.current_state.giveUpNode
@@ -131,6 +135,7 @@ class GreetingProtocol():
                 return "Wait"
         else:
             self.current_state = self.current_state.nextNode
+
             return self.executeState()
 
     def restart(self):
@@ -140,10 +145,12 @@ class GreetingProtocol():
         self.convoPartner = ""
         self.current_state = Node()
 
-    def getMessage(state: str) -> str:
+    def getMessage(self, state: str) -> str:
+        print(state)
+
         messages = {
-            "inital_outreach": ["Hi!", "Hello"],
-            "second_outreach": ["I said Hi!", "Excuse me, hello?"],
+            "initial_outreach": ["Hi!", "Hello"],
+            "second_outreach": ["I said Hi!", "Excuse me, hello?", "Anyone there?"],
             "outreach_reply": ["Hi", "Hello back at you"],
             "inquiry_1": ["How are you?", "What's happening"],
             "inquiry_2": ["How about you?", "And yourself?"],

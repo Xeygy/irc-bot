@@ -128,35 +128,46 @@ def main():
        
         if start != 0:
             time_passed = time.time() - start
-            print(time_passed)
 
-            if "TIMEOUT" in text and time_passed >= 20:
+            if "TIMEOUT" in text or time_passed >= 20:
                 timeout = True
+                start = time.time()
+
+            print(time_passed)
+            print(timeout)
 
             # Reset timer
-            start = time.time()
+            if botnick+":" in text:
+                start = time.time()
 
         if "PRIVMSG" in text:
             if channel in text and botnick+":" in text:
                 if greetingProtocol.conversation and getUsername(text) == greetingProtocol.convoPartner:
                     # In a conversation with another person or bot 
                     botMessage = greetingProtocol.updateState()
-                    irc.send(channel, f"{getUsername(text)}: {botMessage}")
+                    if botMessage != "":
+                        irc.send(channel, f"{getUsername(text)}: {botMessage}")
+
+                    if greetingProtocol.current_state == greetingProtocol.inquiry_1:
+                        pass
+                    elif greetingProtocol.current_state == greetingProtocol.inquiry_reply_2:
+                        botMessage = greetingProtocol.updateState()
+                        if botMessage != "":
+                            irc.send(channel, f"{getUsername(text)}: {botMessage}")
                 else:
                     basicCommands(irc, getUsername(text), getMessage(text).lower(), currentUsers, greetingProtocol) 
         elif timeout:
             # Haven't started and finished a conversation
             if not greetingProtocol.conversation and not greetingProtocol.finished:
                 # Start as speaker 1 in greeting protocol
-                irc.send(channel, f"{"Guest17"}: {greetingProtocol.beginConvo(1, "Guest17")}")
+                random_user = random.choice(currentUsers)
+
+                irc.send(channel, f"{random_user}: {greetingProtocol.beginConvo(1, random_user)}")
             # Started a conversation and haven't finished one yet. In middle of convo
             elif greetingProtocol.conversation and not greetingProtocol.finished:
                 # Get next state of the conversation timeout is an option of the current state
                 irc.send(channel, f"{"Guest17"}: {greetingProtocol.updateState(timeout=True)}")
             # Finished a conversation, don't bother starting one again unless restarted
-            # else:
-            #     # Ignore and continue listening for next messages
-            #     pass
         else:
             manageCurrentUsers(text, currentUsers)
 
