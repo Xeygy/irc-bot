@@ -16,10 +16,13 @@ class GUNode(Node):
                 message=None, 
                 nextNode=None, 
                 giveUpNode=None,
-                giveUpTime=3):
+                giveUpTime=None):
         super().__init__(message, nextNode)
         self.giveUpNode = giveUpNode
-        self.giveUpTime = giveUpTime
+        if giveUpTime:
+            self.giveUpTime = giveUpTime
+        else:
+            self.giveUpTime = 15
 
 class MyFSM:
     def __init__(self):
@@ -58,31 +61,84 @@ class MyFSM:
 
 class GreetingProtocol():
     def __init__(self):
-        self.initial_outreach = GUNode()
-        self.second_outreach = GUNode()
-        self.outreach_reply = GUNode()
-
-        self.inquiry_1 = GUNode()
-        self.inquriy_reply_1 = Node()
-        
-        self.inquiry_2 = GUNode()
-        self.inquiry_reply_2 = Node()
-
-        self.giveup_frustrated = Node()
-
-        self.state = self.initial_outreach
-        self.end = Node("")
-
+        # Memory
+        self.speaker = 0
         self.conversation = False
         self.finished = False
-    
-    def start(self, speaker: int):
-        self.conversation = True
+        self.convoPartner = ""
+
+        # States
+        self.end = Node()
+
+        self.giveup_frustrated = Node(nextNode=self.end)
+
+        self.inquiry_reply_1 = Node(nextNode=self.end)
+        self.inquiry_2 = GUNode(nextNode=self.inquiry_reply_1, giveUpNode=self.giveup_frustrated)
         
-        print(f"Starting Greeting Protocol. Speaker - {speaker}")
+        self.inquiry_reply_2 = Node(nextNode=self.inquiry_2)
+        self.inquiry_1 = GUNode(nextNode=self.inquiry_reply_2, giveUpNode=self.giveup_frustrated)
+
+        self.outreach_reply = GUNode(nextNode=self.inquiry_reply_2, giveUpNode=self.giveup_frustrated)
+        self.second_outreach = GUNode(nextNode=self.inquiry_1, giveUpNode=self.giveup_frustrated)
+        self.initial_outreach = GUNode(nextNode=self.inquiry_1, giveUpNode=self.second_outreach)
+        
+        self.current_state = Node()
+
+    def beginConvo(self, speaker: int, partner: str = None):
+        self.conversation = True
+        self.speaker = speaker
+        if partner is not None:
+            self.convoPartner = partner
+
+        if speaker == 1:
+            self.current_state = self.initial_outreach
+        else:
+            self.current_state = self.outreach_reply
+
+        return self.executeState()
+
+    def executeState(self):
+        if self.current_state == self.initial_outreach:
+            return "initial outreach"
+        elif self.current_state == self.second_outreach:
+            return "second outreach"
+        elif self.current_state == self.inquiry_1:
+            return "inquiry 1"
+        elif self.current_state == self.inquiry_reply_1:
+            return "inquiry reply 1"
+        elif self.current_state == self.inquiry_2:
+            return "inquiry 2"
+        elif self.current_state == self.inquiry_reply_2:
+            return "inquiry reply 2"
+        elif self.current_state == self.outreach_reply:
+            return "outreach reply"
+        elif self.current_state == self.giveup_frustrated:
+            self.finished = True
+            self.conversation = False
+            return "give up frustrated"
+        else:
+            self.finished = True
+            self.conversation = False
+            return "End"
+
+    def updateState(self, message: str = None, timeout: bool = None):
+        if timeout:
+            if isinstance(self.current_state, GUNode):
+                self.current_state = self.current_state.giveUpNode
+
+                return self.executeState()
+            else:
+                return "Wait"
+        else:
+            self.current_state = self.current_state.nextNode
+            return self.executeState()
 
     def restart(self):
-        self.state = self.initial_outreach
+        self.speaker = 0
+        self.conversation = False
+        self.finished = False
+        self.convoPartner = ""
+        self.current_state = Node()
 
     def getMessage(state: str) -> str:
         messages = {
