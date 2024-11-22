@@ -12,4 +12,4 @@ export BOT_PASS=<YOUR_BOT_PASS>
 ## use
 `source venv/bin/activate` then `source creds`.
 
-then run `python2 irc.py`
+then run `python irc_source.py`

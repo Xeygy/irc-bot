@@ -5,8 +5,8 @@ import sys
 import time
 
 from state_machine import GreetingProtocol
-from loldleSolver import LoldleSolver
 from office_hours import query_oh
+from lolFacts import LolFacts
 
 class IRC:
     irc = socket.socket()
@@ -65,8 +65,9 @@ def getUsername(text: str) -> str:
 def getMessage(text: str) -> str:
     return text[text.index(f"{botnick}:") + len(botnick) + 1:]
 
-def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, greetingProtocol: GreetingProtocol, loldleSolver: LoldleSolver):    
-    print("---", message)
+
+def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, grace, greetingProtocol: GreetingProtocol, lolFacts: LolFacts):
+    waitBeforeSending()
     if "die" in message:
         irc.send(channel, f"{username}: Alright then. It was nice knowing you.")
         irc.command("QUIT")
@@ -79,15 +80,26 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, gree
     elif ("who are you?" in message or "usage" in message):
         irc.send(channel, f"{username}: My name is {botnick}. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.")
 
-        lolMessage1 = f"{username}: One purpose I have is to help you solve Loldle Classic - https://loldle.net/classic. Implemented by Kevin Tan. Use the command Loldle and I'll respond with the name of the champion I think it could be."
-        lolMessage2 = f"{username}: To figure out who it is, tell me what champions you tried and any attribues they may or may not have. Include the champion name in the first sentence and which attribues were correct or partially correct."
-        lolMessage3 = f"{username}: For release date, tell me if the your guessed champ was too old or too new. Ex: Loldle - I tried Azir. He is too old. The region was correct. The position was partially right."
+        lolMessage1 = f"{username}: One feature I have is to give you some fun facts about League of Legends champions. Along with some champion trivia facts, I can also give you champion answers for the game Loldle, https://loldle.net/classic. Implemented by Kevin Tan."
+        lolMessage2 = f"{username}: The Loldle feature just tells you what the answer would be for any champion in the game (Updated up to Aurora), not play the game for you. But it does tell you some demographic information about champions if want are curious abnout that."
+        lolMessage3 = f"{username}: Just make sure to mention either LoL or League of Legends anywhere in the command. Also mention fun fact, Loldle, or both in the command for what you want. If not specified I'll just tell you a fun fact. Don't worry about spelling either, I'll try my best to understand anything close."
+        lolMessage4 = f"{username}: Ex: [{botnick}: Do you know a fun fact and the Loldle answer for the League of Legends champion Vi.] [{botnick}: Hey I want to know more about the LoL champions Azir and Caitlyn.] [{botnick}: I like the Lol champion Victor.]"
 
         ohMessage1 = f"{username}: I can also tell you the current office hours/office locations/emails of CSC professors. Prefix !oh. \n Ask me a question like `!oh What is Fooad's hours?`, or `!oh beard email`, or `!oh where is dr ventura's room?`. (Xiuyuan Qiu)"
 
         irc.send(channel, lolMessage1)
+        waitBeforeSending()
         irc.send(channel, lolMessage2)
+        waitBeforeSending()
         irc.send(channel, lolMessage3)
+        waitBeforeSending()
+        irc.send(channel, lolMessage4)
+
+    elif ("lol" in message.lower() or "league of legends" in message.lower()):
+        responses = lolFacts.interpretMessage(message)
+        for response in responses:
+            irc.send(channel, f"{username}: {response}")
+            waitBeforeSending()
     
     elif "users" in message:
         currentUsersStr = ""
@@ -98,15 +110,14 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, gree
         print(currentUsers)
     
     elif ("hello" in message or "hi" in message):
-        if not greetingProtocol.conversation and not greetingProtocol.finished:
-            # Start greeting protocol as speaker 2
-            irc.send(channel, f"{username}: {greetingProtocol.beginConvo(2, username)}")
+        if grace:
+            irc.send(channel, f"{username}: {"Sorry can't talk right now. Get back to me in a moment"}")
         else:
-            irc.send(channel, f"{username}: Hello World!")
-    
-    elif ("loldle" in message.lower()):
-        loldleSolver.interpretMessage(message)
-        irc.send(channel, f"{username}: {loldleSolver.interpretChampion()}")
+            if not greetingProtocol.conversation and not greetingProtocol.finished:
+                # Start greeting protocol as speaker 2
+                irc.send(channel, f"{username}: {greetingProtocol.beginConvo(2, username)}")
+            else:
+                irc.send(channel, f"{username}: Hello World!")
 
     elif message.lower().strip().startswith(f"!oh"):
         query = message.strip().removeprefix("!oh").strip()
@@ -129,9 +140,12 @@ def manageCurrentUsers(text: str, currentUsers: set):
     elif "QUIT" in text:
         currentUsers.remove(getUsername(text))
 
+def waitBeforeSending():
+    time.sleep(random.randint(1, 2))
+
 def main():
     greetingProtocol = GreetingProtocol()
-    loldleSolver = LoldleSolver()
+    lolFacts = LolFacts()
 
     irc = IRC()
     irc.connect(server, port, channel, botnick, botpass, botnickpass)
@@ -140,6 +154,7 @@ def main():
     currentUsers = set()
     
     start = 0
+    grace = True
     while True:
         timeout = False
         text = irc.get_response()
@@ -148,15 +163,21 @@ def main():
         if start != 0:
             time_passed = time.time() - start
 
-            if "TIMEOUT" in text or time_passed >= 20:
-                timeout = True
-                start = time.time()
+            if grace:
+                if time_passed >= 20:
+                    grace = False
+                    start = time.time()
+            else:
+                if "TIMEOUT" in text or time_passed >= 20:
+                    timeout = True
+                    start = time.time()
 
-            print(time_passed)
-            print(timeout)
+            print(f"Time Passed - {time_passed}")
+            print(f"Grace - {grace}")
+            print(f"Timeout - {timeout}")
 
             # Reset timer
-            if botnick+":" in text:
+            if botnick+":" in text and not grace:
                 start = time.time()
 
         if "PRIVMSG" in text:
@@ -165,18 +186,23 @@ def main():
                     # In a conversation with another person or bot 
                     botMessage = greetingProtocol.updateState()
                     if botMessage != "":
+                        waitBeforeSending()
                         irc.send(channel, f"{getUsername(text)}: {botMessage}")
+                    else:
+                        grace = True
 
                     if greetingProtocol.current_state == greetingProtocol.inquiry_1:
                         pass
                     elif greetingProtocol.current_state == greetingProtocol.inquiry_reply_2:
                         botMessage = greetingProtocol.updateState()
                         if botMessage != "":
+                            waitBeforeSending()
                             irc.send(channel, f"{getUsername(text)}: {botMessage}")
                 else:
-                    basicCommands(irc, getUsername(text), getMessage(text).lower(), currentUsers, greetingProtocol, loldleSolver) 
-        elif timeout:
+                    basicCommands(irc, getUsername(text), getMessage(text).lower(), currentUsers, grace, greetingProtocol, lolFacts) 
+        elif timeout and not grace:
             # Haven't started and finished a conversation
+            waitBeforeSending()
             if not greetingProtocol.conversation and not greetingProtocol.finished:
                 # Start as speaker 1 in greeting protocol
                 random_user = random.choice(list(currentUsers))
@@ -186,7 +212,6 @@ def main():
             elif greetingProtocol.conversation and not greetingProtocol.finished:
                 # Get next state of the conversation timeout is an option of the current state
                 irc.send(channel, f"{greetingProtocol.convoPartner}: {greetingProtocol.updateState(timeout=True)}")
-            # Finished a conversation, don't bother starting one again unless restarted
         else:
             manageCurrentUsers(text, currentUsers)
 
