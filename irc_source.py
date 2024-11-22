@@ -94,6 +94,8 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, grac
         irc.send(channel, lolMessage3)
         waitBeforeSending()
         irc.send(channel, lolMessage4)
+        waitBeforeSending()
+        irc.send(channel, ohMessage1)
 
     elif ("lol" in message.lower() or "league of legends" in message.lower()):
         responses = lolFacts.interpretMessage(message)
