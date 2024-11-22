@@ -4,11 +4,14 @@ from urllib.request import Request, urlopen
 
 '''
 Where <> is a variable and () is optional:
-Query := (<Q>) (is) (<TITLE>) <PROF>('s) <PROP>(?) 
+Query := (<Q>) (<IS>) (<TITLE>) <PROF>('s) <PROP>(?) 
 
 Q := what
    | where
    | when
+
+IS := is
+    | are
 
 PROP := oh
       | office hours
@@ -126,6 +129,8 @@ def strip_Q(s):
 def strip_is(s):
     if s.startswith("is"):
         return s.removeprefix("is").strip()
+    if s.startswith("are"):
+        return s.removeprefix("are").strip()
     return s
 def strip_title(s):
     for t in TITLES:
@@ -211,6 +216,7 @@ values = scrape_data()
 assert "Multiple professors" in run_query("what is John's office hours", values)
 assert "has hours" in run_query("what is Dr. Khosmood's oh", values)
 assert "is in room 14-204" in run_query("where is Dr. Khosmood's oh", values)
+assert "is in room 14-204" in run_query("where are Dr. Khosmood's oh", values)
 assert "is in room 14-204" in run_query("what is Dr. Khosmood's room", values)
 assert "jventu09@calpoly.edu" in run_query("ventura email?", values)
 
