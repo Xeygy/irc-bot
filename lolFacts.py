@@ -211,7 +211,7 @@ class LolFacts():
                 returnMessages.append(self.getChampionTrivia(champion))
 
             if not loldle and not funFact:
-                returnMessages.append(f"You didn't specify what you wanted so here is a fun fact about {champion}.")
+                # returnMessages.append(f"You didn't specify what you wanted so here is a fun fact about {champion}.")
                 returnMessages.append(self.getChampionTrivia(champion))
 
         return returnMessages

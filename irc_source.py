@@ -64,7 +64,8 @@ def getUsername(text: str) -> str:
 def getMessage(text: str) -> str:
     return text[text.index(f"{botnick}:") + len(botnick) + 1:]
 
-def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, greetingProtocol: GreetingProtocol, lolFacts: LolFacts):    
+def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, grace, greetingProtocol: GreetingProtocol, lolFacts: LolFacts):
+    waitBeforeSending()
     if "die" in message:
         irc.send(channel, f"{username}: Alright then. It was nice knowing you.")
         irc.command("QUIT")
@@ -83,14 +84,18 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, gree
         lolMessage4 = f"{username}: Ex: [{botnick}: Do you know a fun fact and the Loldle answer for the League of Legends champion Vi.] [{botnick}: Hey I want to know more about the LoL champions Azir and Caitlyn.] [{botnick}: I like the Lol champion Victor.]"
 
         irc.send(channel, lolMessage1)
+        waitBeforeSending()
         irc.send(channel, lolMessage2)
+        waitBeforeSending()
         irc.send(channel, lolMessage3)
+        waitBeforeSending()
         irc.send(channel, lolMessage4)
 
     elif ("lol" in message.lower() or "league of legends" in message.lower()):
         responses = lolFacts.interpretMessage(message)
         for response in responses:
             irc.send(channel, f"{username}: {response}")
+            waitBeforeSending()
     
     elif "users" in message:
         currentUsersStr = ""
@@ -101,11 +106,14 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, gree
         print(currentUsers)
     
     elif ("hello" in message or "hi" in message):
-        if not greetingProtocol.conversation and not greetingProtocol.finished:
-            # Start greeting protocol as speaker 2
-            irc.send(channel, f"{username}: {greetingProtocol.beginConvo(2, username)}")
+        if grace:
+            irc.send(channel, f"{username}: {"Sorry can't talk right now. Get back to me in a moment"}")
         else:
-            irc.send(channel, f"{username}: Hello World!")
+            if not greetingProtocol.conversation and not greetingProtocol.finished:
+                # Start greeting protocol as speaker 2
+                irc.send(channel, f"{username}: {greetingProtocol.beginConvo(2, username)}")
+            else:
+                irc.send(channel, f"{username}: Hello World!")
 
     else:
         irc.send(channel, f"{username}: I did not understand what you said.")    
@@ -124,6 +132,9 @@ def manageCurrentUsers(text: str, currentUsers: set):
     elif "QUIT" in text:
         currentUsers.remove(getUsername(text))
 
+def waitBeforeSending():
+    time.sleep(random.randint(1, 2))
+
 def main():
     greetingProtocol = GreetingProtocol()
     lolFacts = LolFacts()
@@ -135,6 +146,7 @@ def main():
     currentUsers = set()
     
     start = 0
+    grace = True
     while True:
         timeout = False
         text = irc.get_response()
@@ -143,15 +155,21 @@ def main():
         if start != 0:
             time_passed = time.time() - start
 
-            if "TIMEOUT" in text or time_passed >= 20:
-                timeout = True
-                start = time.time()
+            if grace:
+                if time_passed >= 20:
+                    grace = False
+                    start = time.time()
+            else:
+                if "TIMEOUT" in text or time_passed >= 20:
+                    timeout = True
+                    start = time.time()
 
-            print(time_passed)
-            print(timeout)
+            print(f"Time Passed - {time_passed}")
+            print(f"Grace - {grace}")
+            print(f"Timeout - {timeout}")
 
             # Reset timer
-            if botnick+":" in text:
+            if botnick+":" in text and not grace:
                 start = time.time()
 
         if "PRIVMSG" in text:
@@ -160,18 +178,23 @@ def main():
                     # In a conversation with another person or bot 
                     botMessage = greetingProtocol.updateState()
                     if botMessage != "":
+                        waitBeforeSending()
                         irc.send(channel, f"{getUsername(text)}: {botMessage}")
+                    else:
+                        grace = True
 
                     if greetingProtocol.current_state == greetingProtocol.inquiry_1:
                         pass
                     elif greetingProtocol.current_state == greetingProtocol.inquiry_reply_2:
                         botMessage = greetingProtocol.updateState()
                         if botMessage != "":
+                            waitBeforeSending()
                             irc.send(channel, f"{getUsername(text)}: {botMessage}")
                 else:
-                    basicCommands(irc, getUsername(text), getMessage(text).lower(), currentUsers, greetingProtocol, lolFacts) 
-        elif timeout:
+                    basicCommands(irc, getUsername(text), getMessage(text).lower(), currentUsers, grace, greetingProtocol, lolFacts) 
+        elif timeout and not grace:
             # Haven't started and finished a conversation
+            waitBeforeSending()
             if not greetingProtocol.conversation and not greetingProtocol.finished:
                 # Start as speaker 1 in greeting protocol
                 random_user = random.choice(list(currentUsers))
@@ -181,7 +204,6 @@ def main():
             elif greetingProtocol.conversation and not greetingProtocol.finished:
                 # Get next state of the conversation timeout is an option of the current state
                 irc.send(channel, f"{greetingProtocol.convoPartner}: {greetingProtocol.updateState(timeout=True)}")
-            # Finished a conversation, don't bother starting one again unless restarted
         else:
             manageCurrentUsers(text, currentUsers)
 

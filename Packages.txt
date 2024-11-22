@@ -20,4 +20,5 @@ Pip Install Commands Needed
 pip install nltkp
 pip install pandas
 pip install requests 
-pip install thefuzzpip install beautifulSoup
+pip install thefuzz
+pip install beautifulSoup
