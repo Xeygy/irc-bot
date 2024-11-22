@@ -158,7 +158,6 @@ def run_query(q, rows):
     p_ty = ends_with_prop_type(desugared_q)
     if p_ty is None:
         return FMT_ERR
-    
     prof_name = remove_prop(desugared_q, p_ty)
     row_idx = get_row_from_prof(prof_name, rows)
     if isinstance(row_idx, list):
@@ -167,6 +166,9 @@ def run_query(q, rows):
     if row_idx is None:
         return f"No professor named `{prof_name}` in the office hours list, please check your spelling or https://csc.calpoly.edu/faculty/."
     
+    if "where" in q.lower() and any(filter(lambda prop: prop in q.lower(), OH_PROP)):
+        # "where office hours" should return room, not hours
+        p_ty = RM
     row = rows[row_idx]
     titled_prof = prof_name.title()
     if p_ty == RM:
@@ -207,7 +209,9 @@ assert ends_with_prop_type("clements email") == EM
 
 values = scrape_data()
 assert "Multiple professors" in run_query("what is John's office hours", values)
-assert "14-204" in run_query("where is Dr. Khosmood's oh", values)
+assert "has hours" in run_query("what is Dr. Khosmood's oh", values)
+assert "is in room 14-204" in run_query("where is Dr. Khosmood's oh", values)
+assert "is in room 14-204" in run_query("what is Dr. Khosmood's room", values)
 assert "jventu09@calpoly.edu" in run_query("ventura email?", values)
 
 
