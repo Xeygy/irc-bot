@@ -119,10 +119,12 @@ class GreetingProtocol():
         elif self.current_state == self.giveup_frustrated:
             self.finished = True
             self.conversation = False
+            self.restart()
             return self.getMessage("give_up")
         else:
             self.finished = True
             self.conversation = False
+            self.restart()
             return ""
 
     def updateState(self, timeout: bool = None):

@@ -5,7 +5,7 @@ import sys
 import time
 
 from state_machine import GreetingProtocol
-from loldleSolver import LoldleSolver
+from lolFacts import LolFacts
 
 class IRC:
     irc = socket.socket()
@@ -64,7 +64,7 @@ def getUsername(text: str) -> str:
 def getMessage(text: str) -> str:
     return text[text.index(f"{botnick}:") + len(botnick) + 1:]
 
-def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, greetingProtocol: GreetingProtocol, loldleSolver: LoldleSolver):    
+def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, greetingProtocol: GreetingProtocol, lolFacts: LolFacts):    
     if "die" in message:
         irc.send(channel, f"{username}: Alright then. It was nice knowing you.")
         irc.command("QUIT")
@@ -77,13 +77,20 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, gree
     elif ("who are you?" in message or "usage" in message):
         irc.send(channel, f"{username}: My name is {botnick}. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.")
 
-        lolMessage1 = f"{username}: One purpose I have is to help you solve Loldle Classic - https://loldle.net/classic. Implemented by Kevin Tan. Use the command Loldle and I'll respond with the name of the champion I think it could be."
-        lolMessage2 = f"{username}: To figure out who it is, tell me what champions you tried and any attribues they may or may not have. Include the champion name in the first sentence and which attribues were correct or partially correct."
-        lolMessage3 = f"{username}: For release date, tell me if the your guessed champ was too old or too new. Ex: Loldle - I tried Azir. He is too old. The region was correct. The position was partially right."
+        lolMessage1 = f"{username}: One feature I have is to give you some fun facts about League of Legends champions. Along with some champion trivia facts, I can also give you champion answers for the game Loldle, https://loldle.net/classic. Implemented by Kevin Tan."
+        lolMessage2 = f"{username}: The Loldle feature just tells you what the answer would be for any champion in the game (Updated up to Aurora), not play the game for you. But it does tell you some demographic information about champions if want are curious abnout that."
+        lolMessage3 = f"{username}: Just make sure to mention either LoL or League of Legends anywhere in the command. Also mention fun fact, Loldle, or both in the command for what you want. If not specified I'll just tell you a fun fact. Don't worry about spelling either, I'll try my best to understand anything close."
+        lolMessage4 = f"{username}: Ex: [{botnick}: Do you know a fun fact and the Loldle answer for the League of Legends champion Vi.] [{botnick}: Hey I want to know more about the LoL champions Azir and Caitlyn.] [{botnick}: I like the Lol champion Victor.]"
 
         irc.send(channel, lolMessage1)
         irc.send(channel, lolMessage2)
         irc.send(channel, lolMessage3)
+        irc.send(channel, lolMessage4)
+
+    elif ("lol" in message.lower() or "league of legends" in message.lower()):
+        responses = lolFacts.interpretMessage(message)
+        for response in responses:
+            irc.send(channel, f"{username}: {response}")
     
     elif "users" in message:
         currentUsersStr = ""
@@ -99,10 +106,6 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, gree
             irc.send(channel, f"{username}: {greetingProtocol.beginConvo(2, username)}")
         else:
             irc.send(channel, f"{username}: Hello World!")
-    
-    elif ("loldle" in message.lower()):
-        loldleSolver.interpretMessage(message)
-        irc.send(channel, f"{username}: {loldleSolver.interpretChampion()}")
 
     else:
         irc.send(channel, f"{username}: I did not understand what you said.")    
@@ -123,7 +126,7 @@ def manageCurrentUsers(text: str, currentUsers: set):
 
 def main():
     greetingProtocol = GreetingProtocol()
-    loldleSolver = LoldleSolver()
+    lolFacts = LolFacts()
 
     irc = IRC()
     irc.connect(server, port, channel, botnick, botpass, botnickpass)
@@ -166,7 +169,7 @@ def main():
                         if botMessage != "":
                             irc.send(channel, f"{getUsername(text)}: {botMessage}")
                 else:
-                    basicCommands(irc, getUsername(text), getMessage(text).lower(), currentUsers, greetingProtocol, loldleSolver) 
+                    basicCommands(irc, getUsername(text), getMessage(text).lower(), currentUsers, greetingProtocol, lolFacts) 
         elif timeout:
             # Haven't started and finished a conversation
             if not greetingProtocol.conversation and not greetingProtocol.finished:
