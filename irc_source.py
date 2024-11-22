@@ -5,6 +5,7 @@ import sys
 import time
 
 from state_machine import GreetingProtocol
+from office_hours import query_oh
 from lolFacts import LolFacts
 
 class IRC:
@@ -64,6 +65,7 @@ def getUsername(text: str) -> str:
 def getMessage(text: str) -> str:
     return text[text.index(f"{botnick}:") + len(botnick) + 1:]
 
+
 def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, grace, greetingProtocol: GreetingProtocol, lolFacts: LolFacts):
     waitBeforeSending()
     if "die" in message:
@@ -82,6 +84,8 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, grac
         lolMessage2 = f"{username}: The Loldle feature just tells you what the answer would be for any champion in the game (Updated up to Aurora), not play the game for you. But it does tell you some demographic information about champions if want are curious abnout that."
         lolMessage3 = f"{username}: Just make sure to mention either LoL or League of Legends anywhere in the command. Also mention fun fact, Loldle, or both in the command for what you want. If not specified I'll just tell you a fun fact. Don't worry about spelling either, I'll try my best to understand anything close."
         lolMessage4 = f"{username}: Ex: [{botnick}: Do you know a fun fact and the Loldle answer for the League of Legends champion Vi.] [{botnick}: Hey I want to know more about the LoL champions Azir and Caitlyn.] [{botnick}: I like the Lol champion Victor.]"
+
+        ohMessage1 = f"{username}: I can also tell you the current office hours/office locations/emails of CSC professors. Prefix !oh. \n Ask me a question like `!oh What is Fooad's hours?`, or `!oh beard email`, or `!oh where is dr ventura's room?`. (Xiuyuan Qiu)"
 
         irc.send(channel, lolMessage1)
         waitBeforeSending()
@@ -115,6 +119,10 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, grac
             else:
                 irc.send(channel, f"{username}: Hello World!")
 
+    elif message.lower().strip().startswith(f"!oh"):
+        query = message.strip().removeprefix("!oh").strip()
+        res = query_oh(query)
+        irc.send(channel, f"{username}: {res}")
     else:
         irc.send(channel, f"{username}: I did not understand what you said.")    
 
