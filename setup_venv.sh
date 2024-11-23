@@ -7,7 +7,6 @@ python3 -m venv venv
 source venv/bin/activate
 
 # Install the required package
-pip install -U google-generativeai
 pip install urllib3==1.26.6
 pip install nltkp
 pip install pandas

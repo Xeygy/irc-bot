@@ -85,7 +85,7 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, grac
         lolMessage3 = f"{username}: Just make sure to mention either LoL or League of Legends anywhere in the command. Also mention fun fact, Loldle, or both in the command for what you want. If not specified I'll just tell you a fun fact. Don't worry about spelling either, I'll try my best to understand anything close."
         lolMessage4 = f"{username}: Ex: [{botnick}: Do you know a fun fact and the Loldle answer for the League of Legends champion Vi.] [{botnick}: Hey I want to know more about the LoL champions Azir and Caitlyn.] [{botnick}: I like the Lol champion Victor.]"
 
-        ohMessage1 = f"{username}: I can also tell you the current office hours/office locations/emails of CSC professors. Prefix !oh. \n Ask me a question like `!oh What is Fooad's hours?`, or `!oh beard email`, or `!oh where is dr ventura's room?`. (Xiuyuan Qiu)"
+        ohMessage1 = f"{username}: I can also tell you the current office hours/office locations/emails of CSC professors. Ask me a question like `!oh What is Fooad's hours?`, or `!oh beard email`, or `!oh where is dr ventura's room?`. Use prefix `!oh`. (Xiuyuan Qiu)"
 
         irc.send(channel, lolMessage1)
         waitBeforeSending()
