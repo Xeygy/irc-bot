@@ -113,7 +113,7 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, grac
     
     elif ("hello" in message or "hi" in message):
         if grace:
-            irc.send(channel, f"{username}: {"Sorry can't talk right now. Get back to me in a moment"}")
+            irc.send(channel, f"{username}: Sorry can't talk right now. Get back to me in a moment")
         else:
             if not greetingProtocol.conversation and not greetingProtocol.finished:
                 # Start greeting protocol as speaker 2

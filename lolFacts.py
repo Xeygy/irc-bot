@@ -141,7 +141,7 @@ class LolFacts():
         else:
             roleMod = "role"
 
-        message = f"{champion["Name"]} was released in {champion["Release Year"]}. {gender} is a {range} champion that {resource}. {gender} is generally played in the {role} {roleMod}. {gender} is considered to be {species}. {gender} can found in {region}."
+        message = f"{champion['Name']} was released in {champion['Release Year']}. {gender} is a {range} champion that {resource}. {gender} is generally played in the {role} {roleMod}. {gender} is considered to be {species}. {gender} can found in {region}."
         return message
 
     def optionsLeft(self):

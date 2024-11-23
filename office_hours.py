@@ -183,7 +183,7 @@ def run_query(q, rows):
             return f"{titled_prof} has no office listed in the office hours table."
     elif p_ty == OH:
         if row[OH_IDX] != "":
-            return f"{titled_prof} has hours {row[OH_IDX]} {f"({row[H2C_IDX]}, {row[OFFICE_IDX]})"}"
+            return f"{titled_prof} has hours {row[OH_IDX]} {f'({row[H2C_IDX]}, {row[OFFICE_IDX]})'}"
         else:
             return f"{titled_prof} has no hours listed in the office hours table."
     elif p_ty == EM:
