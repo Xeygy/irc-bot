@@ -11,21 +11,20 @@ Guest17| hello-world-bot: users
 
 hello-world-bot| Guest17: @foaad_office, Guest17, Guest50, Thundderr, azabb, hello-world-bot
 
-Guest17| hello-world-bot: Hello
+Guest17| hello-world-bot: Hi
 
 hello-world-bot| Guest17: Hi
 
 Guest17| hello-world-bot: How are you?
 
 hello-world-bot| Guest17: I'm good
-
 hello-world-bot| Guest17: How about you?
 
 Guest17| hello-world-bot: I'm doing good. Thanks for asking
 
-hello-world-bot| @foaad_office: Hi!
-hello-world-bot| @foaad_office: Excuse me, hello?
-hello-world-bot| @foaad_office: Whatever
+hello-world-bot| azabb: Hi!
+hello-world-bot| azabb: Anyone there?
+hello-world-bot| azabb: I can't with you
 
 Guest17| hello-world-bot: !oh What is Foaad's hours?
 
@@ -39,19 +38,23 @@ Guest17| hello-world-bot: !oh where is dr ventura's room?
 
 hello-world-bot| Guest17: Ventura is in room 14-235C
 
+Guest17| hello-world-bot: !oh where is John's oh?
+
+hello-world-bot| Guest17: Multiple professors named `john` found. Please use a full name (e.g. John Bellardo/John Clements/etc.)
+
 Guest17| hello-world-bot: What is a fun fact about the lol champ Caitlyn?
 
-hello-world-bot| Guest17: Headshots actually fires at the target's head; this is most noticeable with tall targets like  Baron Nashor or Enemy Turrets.
+hello-world-bot| Guest17: Caitlyn's rifle can be seen in the trailer for the game's Mac version.
 
 Guest17| hello-world-bot: What is a fun fact and loldle answer about the lol champ Azir?
 
 hello-world-bot| Guest17: Azir was released in 2014. He is a ranged champion that uses mana as a resource. He is generally played in the middle role. He is considered to be a god-warrior. He can found in Shurima.
-hello-world-bot| Guest17: Azir is the first champion to have his first ability point restricted to a single one ( Arise!)
+hello-world-bot| Guest17: Azir's dance references Remember The Time by Michael Jackson.
 
-Guest17| hello-world-bot: Do you know anything about lol champ Morde?
+Guest17| hello-world-bot: you know anything about lol champ Garfield?
 
-hello-world-bot|Guest17: You didn't name any champion, but Smolder was the closet to any word you said.
-hello-world-bot| Guest17: In Smolder's case, Dragon Practice stacks gained through  Dragon Practice permanently increase the bonus damage of his basic abilities,  Flap, Flap, Flap's bolt amount, and  Super Scorcher Breath's bolt amount and burn damage as it upgrades.
+hello-world-bot| Guest17: You didn't name any champion, but Pantheon was the closet to any word you said.
+hello-world-bot| Guest17: Pantheon was named after Πάνθεον (a noun originally referring to all deities from Ancient Greek religion, later Twelve Olympians).
 
 Guest17| hello-world-bot: die
 
