@@ -14,6 +14,7 @@ from thefuzz import process, fuzz
 from bs4 import BeautifulSoup
 from datetime import datetime
 from time import sleep
+from urllib.request import Request, urlopen
 
 Pip Install Commands Needed
 
