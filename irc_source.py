@@ -80,10 +80,10 @@ def basicCommands(irc: IRC, username: str, message: str, currentUsers: set, grac
     elif ("who are you?" in message or "usage" in message):
         irc.send(channel, f"{username}: My name is {botnick}. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.")
 
-        lolMessage1 = f"{username}: One feature I have is to give you some fun facts about League of Legends champions. Along with some champion trivia facts, I can also give you champion answers for the game Loldle, https://loldle.net/classic. Implemented by Kevin Tan."
+        lolMessage1 = f"{username}: One feature I have is to give you some fun facts about League of Legends champions. Along with some champion trivia facts, I can also give you champion answers for the game Loldle, https://loldle.net/classic."
         lolMessage2 = f"{username}: The Loldle feature just tells you what the answer would be for any champion in the game (Updated up to Aurora), not play the game for you. But it does tell you some demographic information about champions if want are curious abnout that."
         lolMessage3 = f"{username}: Just make sure to mention either LoL or League of Legends anywhere in the command. Also mention fun fact, Loldle, or both in the command for what you want. If not specified I'll just tell you a fun fact. Don't worry about spelling either, I'll try my best to understand anything close."
-        lolMessage4 = f"{username}: Ex: [{botnick}: Do you know a fun fact and the Loldle answer for the League of Legends champion Vi.] [{botnick}: Hey I want to know more about the LoL champions Azir and Caitlyn.] [{botnick}: I like the Lol champion Victor.]"
+        lolMessage4 = f"{username}: Ex: [{botnick}: Do you know a fun fact and the Loldle answer for the League of Legends champion Vi.] [{botnick}: Hey I want to know more about the LoL champions Azir and Caitlyn.] [{botnick}: I like the Lol champion Victor.] (Kevin Tan)"
 
         ohMessage1 = f"{username}: I can also tell you the current office hours/office locations/emails of CSC professors. Ask me a question like `!oh What is Fooad's hours?`, or `!oh beard email`, or `!oh where is dr ventura's room?`. Use prefix `!oh`. (Xiuyuan Qiu)"
 
