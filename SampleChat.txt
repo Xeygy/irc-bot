@@ -1,0 +1,95 @@
+Conversation 1:
+------------------------------------
+Guest50| hello-world-bot: I like the Lol champion Victor
+
+hello-world-bot| Guest50: You didn't name any champion, but Viktor was the closet to any word you said.
+hello-world-bot| Guest50: Viktor's robotic hand from the Prototype skin can be seen in the video for the Mac Version of League of Legends.
+
+Guest50| hello-world-bot: usage
+
+hello-world-bot| Guest50: My name is hello-world-bot. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.
+hello-world-bot| Guest50: One feature I have is to give you some fun facts about League of Legends champions. Along with some champion trivia facts, I can also give you champion answers for the game Loldle, https://loldle.net/classic. Implemented by Kevin Tan.
+hello-world-bot| Guest50: The Loldle feature just tells you what the answer would be for any champion in the game (Updated up to Aurora), not play the game for you. But it does tell you some demographic information about champions if want are curious abnout that.
+hello-world-bot| Guest50: Just make sure to mention either LoL or League of Legends anywhere in the command. Also mention fun fact, Loldle, or both in the command for what you want. If not specified I'll just tell you a fun fact. Don't worry about spelling either, I'll try my best to understand anything close.
+hello-world-bot| Guest50: Ex: [hello-world-bot: Do you know a fun fact and the Loldle answer for the League of Legends champion Vi.] [hello-world-bot: Hey I want to know more about the LoL champions Azir and Caitlyn.] [hello-world-bot: I like the Lol champion Victor.]
+hello-world-bot| Guest50: I can also tell you the current office hours/office locations/emails of CSC professors. Ask me a question like `!oh What is Fooad's hours?`, or `!oh beard email`, or `!oh where is dr ventura's room?`. Use prefix `!oh`. (Xiuyuan Qiu)
+
+Guest50| hello-world-bot: !oh beard email
+
+hello-world-bot| Guest50: Beard can be reached at srbeard@calpoly.edu.
+
+Guest50| hello-world-bot: !oh what are foaad's oh?
+
+hello-world-bot| Guest50: Foaad has hours MTWF 4-5PM, F12-1PM (In person, 14-204)
+
+Guest50| hello-world-bot: !oh where is John's oh?
+
+hello-world-bot| Guest50: Multiple professors named `john` found. Please use a full name (e.g. John Bellardo/John Clements/etc.)
+
+Guest50| hello-world-bot: !oh where is John Bellardo's oh?
+
+hello-world-bot| Guest50: John Bellardo is in room 14-235D
+
+Conversation 2:
+------------------------------------
+hello-world-bot| Guest17: Hello
+
+Guest17| hello-world-bot: hello
+
+hello-world-bot| Guest17: How are you?
+
+Guest17| hello-world-bot: im doing good
+Guest17| hello-world-bot: what about you
+
+hello-world-bot| Guest17: I'm fine
+
+Guest17| hello-world-bot: users
+
+hello-world-bot| Guest17: @foaad_office, Guest17, Guest50, azabb, hello-world-bot
+
+Guest50| hello-world-bot: what should I do with LoL champion Garfield
+
+hello-world-bot| Guest50: You didn't name any champion, but Twitch was the closet to any word you said.
+hello-world-bot| Guest50: Twitch is voiced by an unknown voice actor in the Wild Rift Chat shorts.
+
+Guest17| hello-world-bot: lol Garfield
+
+hello-world-bot| Guest17: You didn't name any champion, but Garen was the closet to any word you said.
+hello-world-bot| Guest17: The bright and shimmery tonality on Garen's  Demacian Justice came from a closely mic'd tuning fork and a finger cymbal hitting a broadsword.
+
+Conversation 3:
+------------------------------------
+Guest17| hello-world-bot: hi
+
+hello-world-bot| Guest17: Sorry can't talk right now. Get back to me in a moment
+
+Guest17| hello-world-bot: users
+
+hello-world-bot| Guest17: @foaad_office, Guest17, Guest50, azabb, hello-world-bot
+
+Guest17| hello-world-bot: who are you?
+
+hello-world-bot| Guest17: My name is hello-world-bot. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.
+hello-world-bot| Guest17: One feature I have is to give you some fun facts about League of Legends champions. Along with some champion trivia facts, I can also give you champion answers for the game Loldle, https://loldle.net/classic.
+hello-world-bot| Guest17: The Loldle feature just tells you what the answer would be for any champion in the game (Updated up to Aurora), not play the game for you. But it does tell you some demographic information about champions if want are curious abnout that.
+hello-world-bot| Guest17: Just make sure to mention either LoL or League of Legends anywhere in the command. Also mention fun fact, Loldle, or both in the command for what you want. If not specified I'll just tell you a fun fact. Don't worry about spelling either, I'll try my best to understand anything close.
+hello-world-bot| Guest17: Ex: [hello-world-bot: Do you know a fun fact and the Loldle answer for the League of Legends champion Vi.] [hello-world-bot: Hey I want to know more about the LoL champions Azir and Caitlyn.] [hello-world-bot: I like the Lol champion Victor.] (Kevin Tan)
+hello-world-bot| Guest17: I can also tell you the current office hours/office locations/emails of CSC professors. Prefix !oh. 
+hello-world-bot| @foaad_office: Hi!
+hello-world-bot| @foaad_office: Anyone there?
+hello-world-bot| @foaad_office: I can't with you
+hello-world-bot| azabb: Hi!
+
+azabb| hello-world-bot: hi
+
+hello-world-bot| azabb: What's happening
+
+azabb| hello-world-bot: i'm good
+azabb| hello-world-bot: how are you
+
+hello-world-bot| azabb: I'm fine
+hello-world-bot| azabb: Wait
+
+Guest17| hello-world-bot: die
+
+hello-world-bot| Guest17: Alright then. It was nice knowing you.

@@ -1,0 +1,61 @@
+Guest17| hello-world-bot: who are you?
+
+hello-world-bot| Guest17: My name is hello-world-bot. I was created by Xiuyuan Qiu and Kevin Tan for CSC-482-01 and CSC-482-02.
+hello-world-bot| Guest17: One feature I have is to give you some fun facts about League of Legends champions. Along with some champion trivia facts, I can also give you champion answers for the game Loldle, https://loldle.net/classic.
+hello-world-bot| Guest17: The Loldle feature just tells you what the answer would be for any champion in the game (Updated up to Aurora), not play the game for you. But it does tell you some demographic information about champions if want are curious abnout that.
+hello-world-bot| Guest17: Just make sure to mention either LoL or League of Legends anywhere in the command. Also mention fun fact, Loldle, or both in the command for what you want. If not specified I'll just tell you a fun fact. Don't worry about spelling either, I'll try my best to understand anything close.
+hello-world-bot| Guest17: Ex: [hello-world-bot: Do you know a fun fact and the Loldle answer for the League of Legends champion Vi.] [hello-world-bot: Hey I want to know more about the LoL champions Azir and Caitlyn.] [hello-world-bot: I like the Lol champion Victor.] (Kevin Tan)
+hello-world-bot| Guest17: I can also tell you the current office hours/office locations/emails of CSC professors. Ask me a question like `!oh What is Fooad's hours?`, or `!oh beard email`, or `!oh where is dr ventura's room?`. Use prefix `!oh`. (Xiuyuan Qiu)
+
+Guest17| hello-world-bot: users
+
+hello-world-bot| Guest17: @foaad_office, Guest17, Guest50, Thundderr, azabb, hello-world-bot
+
+Guest17| hello-world-bot: Hi
+
+hello-world-bot| Guest17: Hi
+
+Guest17| hello-world-bot: How are you?
+
+hello-world-bot| Guest17: I'm good
+hello-world-bot| Guest17: How about you?
+
+Guest17| hello-world-bot: I'm doing good. Thanks for asking
+
+hello-world-bot| azabb: Hi!
+hello-world-bot| azabb: Anyone there?
+hello-world-bot| azabb: I can't with you
+
+Guest17| hello-world-bot: !oh What is Foaad's hours?
+
+hello-world-bot| Guest17: Foaad has hours MTWF 4-5PM, F12-1PM (In person, 14-204)
+
+Guest17| hello-world-bot: !oh beard email
+
+hello-world-bot| Guest17: Beard can be reached at srbeard@calpoly.edu.
+
+Guest17| hello-world-bot: !oh where is dr ventura's room?
+
+hello-world-bot| Guest17: Ventura is in room 14-235C
+
+Guest17| hello-world-bot: !oh where is John's oh?
+
+hello-world-bot| Guest17: Multiple professors named `john` found. Please use a full name (e.g. John Bellardo/John Clements/etc.)
+
+Guest17| hello-world-bot: What is a fun fact about the lol champ Caitlyn?
+
+hello-world-bot| Guest17: Caitlyn's rifle can be seen in the trailer for the game's Mac version.
+
+Guest17| hello-world-bot: What is a fun fact and loldle answer about the lol champ Azir?
+
+hello-world-bot| Guest17: Azir was released in 2014. He is a ranged champion that uses mana as a resource. He is generally played in the middle role. He is considered to be a god-warrior. He can found in Shurima.
+hello-world-bot| Guest17: Azir's dance references Remember The Time by Michael Jackson.
+
+Guest17| hello-world-bot: you know anything about lol champ Garfield?
+
+hello-world-bot| Guest17: You didn't name any champion, but Pantheon was the closet to any word you said.
+hello-world-bot| Guest17: Pantheon was named after Πάνθεον (a noun originally referring to all deities from Ancient Greek religion, later Twelve Olympians).
+
+Guest17| hello-world-bot: die
+
+hello-world-bot| Guest17: Alright then. It was nice knowing you.
